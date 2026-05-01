@@ -2,27 +2,55 @@
 <html>
 <head>
   <title>LED Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      background: #6a0dad; /* purple violet */
+      font-family: Arial;
+      text-align: center;
+      color: white;
+      padding-top: 50px;
+    }
+
+    h1 {
+      font-size: 30px;
+    }
+
+    button {
+      background-color: #8a2be2; /* violet */
+      border: none;
+      color: white;
+      padding: 20px;
+      margin: 15px;
+      font-size: 22px;
+      border-radius: 12px;
+      width: 80%; /* besar bila kat phone */
+      max-width: 300px;
+    }
+
+    button:active {
+      background-color: #5a0ca3;
+    }
+  </style>
 </head>
 
-<body style="text-align:center; margin-top:50px;">
+<body>
 
-<h1>LED Control</h1>
+<h1>LED CONTROL</h1>
 
-<button onclick="sendData('LED 1')">LED 1</button>
-<button onclick="sendData('LED 2')">LED 2</button>
+<button onclick="setLED(1,1)">LED 1 ON</button>
+<button onclick="setLED(1,0)">LED 1 OFF</button>
 
-<p id="status">Waiting...</p>
+<button onclick="setLED(2,1)">LED 2 ON</button>
+<button onclick="setLED(2,0)">LED 2 OFF</button>
 
 <script>
-function sendData(value) {
-
-  document.getElementById("status").innerHTML = value + " sent";
-
-  fetch("https://led-control-nfc-default-rtdb.firebaseio.com/queue.json", {
-    method: "POST",
-    body: JSON.stringify(value)
+function setLED(led, value) {
+  fetch("https://led-control-nfc-default-rtdb.firebaseio.com/led" + led + ".json", {
+    method: "PUT",
+    body: value
   });
-
 }
 </script>
 
