@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lift Control</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+      margin-top: 50px;
+    }
+    button {
+      padding: 20px;
+      font-size: 20px;
+      margin: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Smart Elevator Control</h1>
+<h3>Select Floor</h3>
+
+<button onclick="sendData('F1')">Floor 1</button>
+<button onclick="sendData('F2')">Floor 2</button>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
+
+<script>
+var firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  databaseURL: "YOUR_DATABASE_URL"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+function sendData(value) {
+  firebase.database().ref("floor").set(value);
+}
+</script>
+
+</body>
+</html>
