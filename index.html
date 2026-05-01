@@ -1,62 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LED Control System</title>
-
-  <style>
-    body {
-      text-align: center;
-      font-family: Arial;
-      margin-top: 60px;
-      background: linear-gradient(to right, #6a0dad, #b19cd9);
-      color: white;
-    }
-
-    h1 {
-      font-size: 35px;
-    }
-
-    button {
-      padding: 20px 40px;
-      font-size: 20px;
-      margin: 15px;
-      border: none;
-      border-radius: 10px;
-      background-color: #800080;
-      color: white;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #a020f0;
-      transform: scale(1.1);
-    }
-
-    #status {
-      margin-top: 25px;
-      font-size: 22px;
-    }
-  </style>
+  <title>LED Control</title>
 </head>
 
-<body>
+<body style="text-align:center; margin-top:50px;">
 
-<h1>LED Control System</h1>
-<h3>Select LED</h3>
+<h1>LED Control</h1>
 
 <button onclick="sendData('LED 1')">LED 1</button>
 <button onclick="sendData('LED 2')">LED 2</button>
 
-<div id="status">Status: Waiting</div>
+<p id="status">Waiting...</p>
 
 <script>
 function sendData(value) {
 
-  // update status kat web
-  document.getElementById("status").innerHTML = value + " sent to system";
+  document.getElementById("status").innerHTML = value + " sent";
 
-  // hantar ke Firebase
   fetch("https://led-control-nfc-default-rtdb.firebaseio.com/queue.json", {
     method: "POST",
     body: JSON.stringify(value)
