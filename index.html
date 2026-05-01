@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Lift Control</title>
+  <title>LED Control</title>
+
   <style>
     body {
       text-align: center;
       font-family: Arial;
       margin-top: 50px;
+      background: linear-gradient(to right, #6a0dad, #b19cd9);
+      color: white;
     }
+
+    h1 {
+      font-size: 40px;
+    }
+
     button {
-      padding: 20px;
+      padding: 20px 40px;
       font-size: 20px;
-      margin: 10px;
+      margin: 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: #800080;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #a020f0;
+      transform: scale(1.1);
+    }
+
+    #status {
+      margin-top: 30px;
+      font-size: 24px;
+      color: #ffe6ff;
     }
   </style>
 </head>
@@ -21,21 +46,18 @@
 <h1>Smart Elevator Control</h1>
 <h3>Select Floor</h3>
 
-<button onclick="sendData('F1')">Floor 1</button>
-<button onclick="sendData('F2')">Floor 2</button>
+<button onclick="led1()">Floor 1</button>
+<button onclick="led2()">Floor 2</button>
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
+<div id="status">Status: None</div>
 
 <script>
-var firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  databaseURL: "YOUR_DATABASE_URL"
-};
+function led1() {
+  document.getElementById("status").innerHTML = "Floor 1 Selected";
+}
 
-firebase.initializeApp(firebaseConfig);
-
-function sendData(value) {
-  firebase.database().ref("floor").set(value);
+function led2() {
+  document.getElementById("status").innerHTML = "Floor 2 Selected";
 }
 </script>
 
