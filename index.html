@@ -1,42 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>LED Control</title>
+  <title>LED Control System</title>
 
   <style>
     body {
       text-align: center;
       font-family: Arial;
-      margin-top: 60px;
+      margin-top: 50px;
       background: linear-gradient(to right, #6a0dad, #b19cd9);
       color: white;
-    }
-
-    h1 {
-      font-size: 40px;
     }
 
     button {
       padding: 20px 40px;
       font-size: 20px;
-      margin: 15px;
+      margin: 10px;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       background-color: #800080;
       color: white;
       cursor: pointer;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      background-color: #a020f0;
-      transform: scale(1.1);
     }
 
     #status {
-      margin-top: 30px;
-      font-size: 24px;
-      color: #ffe6ff;
+      margin-top: 20px;
+      font-size: 22px;
+    }
+
+    #queue {
+      margin-top: 20px;
+      font-size: 18px;
     }
   </style>
 </head>
@@ -46,25 +40,74 @@
 <h1>LED Control System</h1>
 <h3>Select LED</h3>
 
-<button onclick="led1()">LED 1</button>
-<button onclick="led2()">LED 2</button>
+<button onclick="addQueue('LED 1')">LED 1</button>
+<button onclick="addQueue('LED 2')">LED 2</button>
 
-<div id="status">Status: None</div>
+<div id="status">Status: Idle</div>
+<div id="queue">Queue: None</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase.js"></script>
 
 <script>
-function led1() {
-  document.getElementById("status").innerHTML = "LED 1 ON (30 seconds)";
+var firebaseConfig = {
+  apiKey: "PASTE_API_KEY_KAU",
+  databaseURL: "https://led-control-nfc-default-rtdb.firebaseio.com"
+};
 
-  setTimeout(function() {
-    document.getElementById("status").innerHTML = "LED 1 OFF";
-  }, 30000);
+firebase.initializeApp(firebaseConfig);
+
+let queueRef = firebase.database().ref("queue");
+
+let localQueue = [];
+let isRunning = false;
+
+// tekan button → masuk Firebase
+function addQueue(led) {
+  queueRef.push(led);
 }
 
-function led2() {
-  document.getElementById("status").innerHTML = "LED 2 ON (30 seconds)";
+// ambil data dari Firebase (real-time)
+queueRef.on("value", (snapshot) => {
+  let data = snapshot.val();
+  localQueue = [];
 
-  setTimeout(function() {
-    document.getElementById("status").innerHTML = "LED 2 OFF";
+  for (let key in data) {
+    localQueue.push({key: key, value: data[key]});
+  }
+
+  updateQueue();
+  runQueue();
+});
+
+// display queue
+function updateQueue() {
+  if (localQueue.length === 0) {
+    document.getElementById("queue").innerHTML = "Queue: None";
+  } else {
+    let list = localQueue.map(item => item.value);
+    document.getElementById("queue").innerHTML = "Queue: " + list.join(", ");
+  }
+}
+
+// run ikut giliran
+function runQueue() {
+  if (isRunning || localQueue.length === 0) return;
+
+  isRunning = true;
+
+  let current = localQueue[0];
+
+  document.getElementById("status").innerHTML = current.value + " ON (30s)";
+
+  setTimeout(() => {
+    document.getElementById("status").innerHTML = current.value + " OFF";
+
+    // delete dari Firebase (remove yang dah siap)
+    queueRef.child(current.key).remove();
+
+    isRunning = false;
+    runQueue();
   }, 30000);
 }
 </script>
